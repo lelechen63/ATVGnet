@@ -101,16 +101,6 @@ If you use these models or the ideas in your research, please cite:
 0. Regresssion based discriminator network
 
 	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.jpg)
-
-### Disclaimer and known issues
-
-0. These codes are implmented in Pytorch
-0. In this paper, we train LRW and GRID seperately.
-0. The model are sensitive to input images. Please use the correct preprocessing code.
-0. I didn't finish the data processing code yet. I will release it soon. But you can try the model and replace with your own image.
-0. If you want to train these models using this version of pytorch without modifications, please notice that:
-	- You need at lest 12 GB GPU memory.
-	- There might be some other untested issues.
 	
 	
 
@@ -127,3 +117,15 @@ If you use these models or the ideas in your research, please cite:
 
 0. Quantitative results:
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg)
+	
+
+### Disclaimer and known issues
+
+0. These codes are implmented in Pytorch
+0. In this paper, we train LRW and GRID seperately.
+0. The model are sensitive to input images. Please use the correct preprocessing code.
+0. I didn't finish the data processing code yet. I will release it soon. But you can try the model and replace with your own image.
+0. If you want to train these models using this version of pytorch without modifications, please notice that:
+	- You need at lest 12 GB GPU memory.
+	- There might be some other untested issues.
+	
