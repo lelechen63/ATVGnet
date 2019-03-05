@@ -17,7 +17,7 @@ University of Rochester.
 
 ### Introduction
 
-This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (https://arxiv.org/abs/1802.02427). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). 
+This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (https://arxiv.org/abs/1802.02427). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). The outputs from the model are visualized here: the first one is the synthesized landmark from ATnet, the rest of them are attention, motion map and final results from VGnet.
 
 ![model](https://github.com/lelechen63/ATVGnet/blob/master/img/visualization.gif)
 
@@ -48,45 +48,37 @@ If you use these models or the ideas in your research, please cite:
 ### Running
 
 
-0. Pre-installation:[Tensorflow](https://www.tensorflow.org/install/),[Ants](https://github.com/ANTsX/ANTs),[nibabel](http://nipy.org/nibabel/),[sklearn](http://scikit-learn.org/stable/),[numpy](http://www.numpy.org/)
+0. Pre-installation:[Pytorch 0.4.1](https://pytorch.org/), [dlib](https://pypi.org/project/dlib/), [opencv 2.4.11](https://opencv.org/), [scipy](https://anaconda.org/anaconda/scipy), [librosa](https://librosa.github.io/librosa/), [sk-image](http://scikit-image.org/docs/dev/api/skimage.html), [tqdm](https://github.com/tqdm/tqdm).
 
-0. Download and unzip the training data from [BTRAS2017](http://braintumorsegmentation.org/)
+0. Download and unzip the training data from [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html)
 
-0. Use N4ITK to correct the data: `python n4correction.py /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
-0. Train the model:  `python train.py`
-	- `-gpu`: gpu id
-	- `-bs`: batch size 
-	- `-mn`: model name, 'dense24' or 'dense48' or 'no-dense' or 'dense24_nocorrection'
-	- `-nc`:  [n4ITK bias correction](https://www.ncbi.nlm.nih.gov/pubmed/20378467),True or False
-	- `-e`: epoch number 
-	- `-r`: data path
-	- `-sp`: save path/name
+0. Preprocess the data (Extract landmark and crop the image by dlib).
+0. Train the ATnet model:  `python aetnet.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size 
+	- `-model_dir`: folder to save weights
+	- `-lstm`:  use lstm or not
+	- `-sample_dir`: folder to save visualized images during training
+	.
+
+
+0. Test the model: `python atnet_test.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size
+	- `-model_name`: pretrained weights
+	- `-sample_dir`: folder to save the outputs
+	- `-lstm`:  use lstm or not
 	- ...
-
-For example:
-`python train.py -bs 2 -gpu 0  -mn dense24 -nc True -sp dense48_correction -e 5  -r /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
-
-0. Test the model: `python test.py`
-	- `-gpu`: gpu id
-	- `-m`: model path, the saved model name
-	- `-mn`: model name, 'dense24' or 'dense48' or 'no-dense' or 'dense24_nocorrection'
-	- `-nc`:  [n4ITK bias correction](https://www.ncbi.nlm.nih.gov/pubmed/20378467), True or False
-	- `-r`: data path
-	- ...
-
-For example:
-`python test.py -m Dense24_correction-2 -mn dense24 -gpu 0 -nc True  -r /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
-
 
 ### Model
 
-0. Hierarchical segmentation
-	![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/2.png)
+0. Overall ATVGnet
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.pdf)
 
 	
-0. 3D densely connected CNN
+0. Regresssion based discriminator network
 
-	![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/1.png)
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.pdf)
 
 ### Disclaimer and known issues
 
