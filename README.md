@@ -12,7 +12,7 @@ University of Rochester.
 0. [Citation](#citation)
 0. [Running](#running)
 0. [Model](#model)
-1. 0. [Results](#results)
+0. [Results](#results)
 0. [Disclaimer and known issues](#disclaimer-and-known-issues)
 
 ### Introduction
