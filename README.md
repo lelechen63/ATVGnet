@@ -59,7 +59,7 @@ If you use these models or the ideas in your research, please cite:
 	- `-model_dir`: folder to save weights
 	- `-lstm`:  use lstm or not
 	- `-sample_dir`: folder to save visualized images during training
-	.
+	- ...
 
 
 0. Test the model: `python atnet_test.py`
@@ -69,31 +69,55 @@ If you use these models or the ideas in your research, please cite:
 	- `-sample_dir`: folder to save the outputs
 	- `-lstm`:  use lstm or not
 	- ...
-
+0. Train the VGnet:	`python vgnet.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size 
+	- `-model_dir`: folder to save weights
+	- `-sample_dir`: folder to save visualized images during training
+	- ...
+0. Test the VGnet: 	`python vgnet_test.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size
+	- `-model_name`: pretrained weights
+	- `-sample_dir`: folder to save the outputs
+	- ...
+0. Run the demo code: `python demo.py`
+	- `-device_ids`: gpu id
+	- `-cuda`: using cuda or not
+	- `-vg_model`: pretrained VGnet weight
+	- `-at_model`: pretrained ATnet weight
+	- `-lstm`:  use lstm or not
+	- `-p`:  input example image
+	- `-i`:  input audio file
+	- `-lstm`:  use lstm or not
+	- `-sample_dir`: folder to save the outputs
+	- ...
 ### Model
 
 0. Overall ATVGnet
-	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.pdf)
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.jpg)
 
 	
 0. Regresssion based discriminator network
 
-	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.pdf)
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.jpg)
 
 ### Disclaimer and known issues
 
-0. These codes are implmented in Tensorflow
-0. In this paper, we only use the glioblastoma (HGG) dataset.
-0. I didn't config nipype.interfaces.ants.segmentation. So if you need to use `n4correction.py` code, you need to copy it to the bin directory where antsRegistration etc are located. Then run `python n4correction.py`
-0. If you want to train these models using this version of tensorflow without modifications, please notice that:
+0. These codes are implmented in Pytorch
+0. In this paper, we train LRW and GRID seperately.
+0. The model are sensitive to input images. Please use the correct preprocessing code.
+0. I didn't finish the data processing code yet. I will release it soon. But you can try the model and replace with your own image.
+0. If you want to train these models using this version of pytorch without modifications, please notice that:
 	- You need at lest 12 GB GPU memory.
 	- There might be some other untested issues.
+	
 	
 
 ### Results
 0. Result visualization :
-	![visualization](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/h.png)
-	![visualization](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/v.png)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
 
 0. Quantitative results:
 
