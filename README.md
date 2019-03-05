@@ -1,4 +1,4 @@
-# Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss （ATVGnet）
+## Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss （ATVGnet）
 
 By [Lele Chen](http://www.cs.rochester.edu/u/lchen63/) ,
 [Ross K Maddox](https://www.urmc.rochester.edu/labs/maddox.aspx),
@@ -12,8 +12,8 @@ University of Rochester.
 0. [Citation](#citation)
 0. [Running](#running)
 0. [Model](#model)
+1. 0. [Results](#results)
 0. [Disclaimer and known issues](#disclaimer-and-known-issues)
-0. [Results](#results)
 
 ### Introduction
 
@@ -129,3 +129,11 @@ If you use these models or the ideas in your research, please cite:
 	- You need at lest 12 GB GPU memory.
 	- There might be some other untested issues.
 	
+### Todos
+
+ - Release training data
+
+License
+----
+
+MIT
