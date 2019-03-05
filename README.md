@@ -116,14 +116,10 @@ If you use these models or the ideas in your research, please cite:
 
 ### Results
 0. Result visualization :
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
-
+0. Reuslt compared with other SOTA methods:
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
+0. The studies on image robustness respective with landmark accuracy:
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.jpg)
 0. Quantitative results:
-
-	model|whole|peritumoral edema (ED)|FGD-enhan. tumor (ET)
-	:---:|:---:|:---:|:---:
-	Dense24 |0.74| 0.81| 0.80
-	Dense48 | 0.61|0.78|0.79
-	no-dense|0.61|0.77|0.78
-	dense24+n4correction|0.72|0.83|0.81
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.jpg)
