@@ -100,7 +100,7 @@ If you use these models or the ideas in your research, please cite:
 	
 0. Regresssion based discriminator network
 
-	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.jpg =300x300)
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.jpg)
 	
 	
 
