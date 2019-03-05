@@ -113,10 +113,10 @@ If you use these models or the ideas in your research, please cite:
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 
 0. The studies on image robustness respective with landmark accuracy:
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.jpg =400x400)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.jpg | width=400)
 
 0. Quantitative results:
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg =400x300)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg | width=400)
 	
 
 ### Disclaimer and known issues
