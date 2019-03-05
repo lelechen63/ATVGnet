@@ -17,9 +17,9 @@ University of Rochester.
 
 ### Introduction
 
-This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (https://arxiv.org/abs/1802.02427). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html). 
+This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (https://arxiv.org/abs/1802.02427). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). 
 
-![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/spie.gif)
+![model](https://github.com/lelechen63/ATVGnet/blob/master/img/visualization.gif)
 
 
 ### Citation
