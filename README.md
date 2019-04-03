@@ -26,6 +26,7 @@ This repository contains the original models (AT-net, VG-net) described in the p
 ### Citation
 
 If you use any codes, models or the ideas from this repo in your research, please cite:
+
 	@InProceedings{Chen_2019_CVPR,
 	author = {Lele Chen, Ross K Maddox, Zhiyao Duan, Chenliang Xu},
 	title = {Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss},
@@ -96,15 +97,19 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 ### Results
 
 0. Result visualization :
+
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
 
 0. Reuslt compared with other SOTA methods:
+
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 
 0. The studies on image robustness respective with landmark accuracy:
+
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.png)
 
 0. Quantitative results:
+
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg)
 	
 
