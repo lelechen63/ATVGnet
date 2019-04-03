@@ -96,7 +96,7 @@ If you use these models or the ideas in your research, please cite:
 ### Model
 
 0. Overall ATVGnet
-	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.jpg)
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.png)
 
 	
 0. Regresssion based discriminator network
@@ -114,7 +114,7 @@ If you use these models or the ideas in your research, please cite:
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 
 0. The studies on image robustness respective with landmark accuracy:
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.jpg)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.png)
 
 0. Quantitative results:
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg)
