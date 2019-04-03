@@ -25,7 +25,7 @@ This repository contains the original models (AT-net, VG-net) described in the p
 
 ### Citation
 
-If you use these models or the ideas in your research, please cite:
+If you use any codes, models or the ideas from this repo in your research, please cite:
 	
 	@inproceedings{DBLP:conf/miip/ChenWDAWX18,
 	  author    = {Lele Chen and
