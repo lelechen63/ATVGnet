@@ -49,7 +49,7 @@ If you use these models or the ideas in your research, please cite:
 ### Running
 
 
-0. Pre-installation:[Pytorch 0.4.1](https://pytorch.org/).
+0. Pre-installation:[Pytorch 0.4.1](https://pytorch.org/). (conda install pytorch=0.4.1 torchvision cuda90 -c pytorch)
 0. Install requirements.txt (pip install -r requirements.txt)
 0. Download and unzip the training data from [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html)
 0. Download the pretrained ATnet and VGnet weights at [google drive](https://drive.google.com/drive/folders/1WYhqKBFX6mLtdJ8sYVLdWUqp5FJDmphg?usp=sharing).
