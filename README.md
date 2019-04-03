@@ -26,26 +26,14 @@ This repository contains the original models (AT-net, VG-net) described in the p
 ### Citation
 
 If you use any codes, models or the ideas from this repo in your research, please cite:
-	
-	@inproceedings{DBLP:conf/miip/ChenWDAWX18,
-	  author    = {Lele Chen and
-		       Yue Wu and
-		       Adora M. DSouza and
-		       Anas Z. Abidin and
-		       Axel Wism{\"{u}}ller and
-		       Chenliang Xu},
-	  title     = {{MRI} tumor segmentation with densely connected 3D {CNN}},
-	  booktitle = {Medical Imaging 2018: Image Processing, Houston, Texas, United States,
-		       10-15 February 2018},
-	  pages     = {105741F},
-	  year      = {2018},
-	  crossref  = {DBLP:conf/miip/2018},
-	  url       = {https://doi.org/10.1117/12.2293394},
-	  doi       = {10.1117/12.2293394},
-	  timestamp = {Tue, 06 Mar 2018 10:50:01 +0100},
-	  biburl    = {https://dblp.org/rec/bib/conf/miip/ChenWDAWX18},
-	  bibsource = {dblp computer science bibliography, https://dblp.org}
+	@InProceedings{Chen_2019_CVPR,
+	author = {Lele Chen, Ross K Maddox, Zhiyao Duan, Chenliang Xu},
+	title = {Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss},
+	booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	month = {June},
+	year = {2019}
 	}
+	
 ### Running
 
 
