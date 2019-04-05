@@ -167,6 +167,9 @@ def test():
     if os.path.exists('../temp'):
         shutil.rmtree('../temp')
     os.mkdir('../temp')
+    os.mkdir('../temp/img')
+    os.mkdir('../temp/motion')
+    os.mkdir('../temp/attention')
     pca = torch.FloatTensor( np.load('../basics/U_lrw1.npy')[:,:6]).cuda()
     mean =torch.FloatTensor( np.load('../basics/mean_lrw1.npy')).cuda()
     decoder = VG_net()
@@ -239,19 +242,29 @@ def test():
 
         fake_lmark = fake_lmark.unsqueeze(0) 
 
-        fake_ims, _ ,_,_ = decoder(example_image, fake_lmark, example_landmark )
+        fake_ims, , att ,colors ,_ = decoder(example_image, fake_lmark, example_landmark )
 
         for indx in range(fake_ims.size(1)):
             fake_im = fake_ims[:,indx]
             fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
-            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp') ,indx ), fake_store)
+            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'img') ,indx ), fake_store)
+
+
+            m = ms[:,indx]
+            att = atts[:,indx]
+            m = m.permute(0,2,3,1).data.cpu().numpy()[0]
+            att = att.data.cpu().numpy()[0,0]
+
+            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'motion' ) ,indx ), m)
+            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'attention') ,indx ), att)
+
         print ( 'In total, generate {:%d} images, cost time: {:%03f} seconds'.format(fake_ims.size(1), time.time() - t) )
         fake_lmark = fake_lmark.data.cpu().numpy()
         np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
         fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
         utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
         video_name = os.path.join(config.sample_dir , 'results.mp4')
-        utils.image_to_video(os.path.join('../', 'temp'), video_name )
+        utils.image_to_video(os.path.join('../', 'temp', 'img'), video_name )
         utils.add_audio(video_name, config.in_file)
         print ('The generated video is: {}'.format(os.path.join(config.sample_dir , 'results.mov')))
         
