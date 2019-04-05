@@ -85,7 +85,6 @@ def normLmarks(lmarks):
     tmp = deepcopy(MSK)
     tmp[:, 48*2:] += np.dot(mouthParams, SK)[0, :, 48*2:]
     open_mouth_params = np.reshape(np.dot(S, tmp[0, :] - MSK[0, :]), (1, 100))
-    print (lmarks.shape)
     if len(lmarks.shape) == 2:
         lmarks = lmarks.reshape(1,68,2)
     for i in range(lmarks.shape[0]):
@@ -246,7 +245,7 @@ def test():
             fake_im = fake_ims[:,indx]
             fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
             scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp') ,indx ), fake_store)
-        print ( 'In total, generate {:%d} images, cost time: {:%d} seconds'.format(fake_ims.size(1), time.time() - t) )
+        print ( 'In total, generate {:%d} images, cost time: {:%03f} seconds'.format(fake_ims.size(1), time.time() - t) )
         fake_lmark = fake_lmark.data.cpu().numpy()
         np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
         fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
