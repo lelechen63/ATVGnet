@@ -242,7 +242,7 @@ def test():
 
         fake_lmark = fake_lmark.unsqueeze(0) 
 
-        fake_ims, , att ,colors ,_ = decoder(example_image, fake_lmark, example_landmark )
+        fake_ims, att ,colors ,_ = decoder(example_image, fake_lmark, example_landmark )
 
         for indx in range(fake_ims.size(1)):
             fake_im = fake_ims[:,indx]
