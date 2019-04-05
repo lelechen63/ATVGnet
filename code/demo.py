@@ -37,11 +37,11 @@ def parse_args():
                      default=True)
     parser.add_argument("--vg_model",
                      type=str,
-                     default="/u/lchen63/lrw/model/gan_lstm/generator_23.pth")
+                     default="../model/gan_lstm/generator_23.pth")
     parser.add_argument("--at_model",
                      type=str,
                      # default="/u/lchen63/lrw/model/audio2lmark_pca/audio2lmark_24.pth")
-                     default="/u/lchen63/lrw/sample/demo/atnet_lstm_18.pth")
+                     default="../model/atnet_lstm_18.pth")
     parser.add_argument( "--sample_dir",
                     type=str,
                     default="../results")
@@ -212,8 +212,6 @@ def test():
     speech = np.insert(speech, 0, np.zeros(1920))
     speech = np.append(speech, np.zeros(1920))
     mfcc = python_speech_features.mfcc(speech,16000,winstep=0.01)
-
-    # print (mfcc.shape)
 
     sound, _ = librosa.load(test_file, sr=44100)
 
