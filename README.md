@@ -98,11 +98,11 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 
 0. Result visualization :
 
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 
 0. Reuslt compared with other SOTA methods:
 
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresultscompare.jpg)
 
 0. The studies on image robustness respective with landmark accuracy:
 
