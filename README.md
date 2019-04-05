@@ -37,9 +37,20 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 	
 ### Running
 
-
-0. Pre-installation:[Pytorch 0.4.1](https://pytorch.org/). (conda install pytorch=0.4.1 torchvision cuda90 -c pytorch)
+0. This code is tested under Python 2.7.
+0. Pytorch environment:[Pytorch 0.4.1](https://pytorch.org/). (conda install pytorch=0.4.1 torchvision cuda90 -c pytorch)
 0. Install requirements.txt (pip install -r requirements.txt)
+0. Run the demo code: `python demo.py`
+	- `-device_ids`: gpu id
+	- `-cuda`: using cuda or not
+	- `-vg_model`: pretrained VGnet weight
+	- `-at_model`: pretrained ATnet weight
+	- `-lstm`:  use lstm or not
+	- `-p`:  input example image
+	- `-i`:  input audio file
+	- `-lstm`:  use lstm or not
+	- `-sample_dir`: folder to save the outputs
+	- ...
 0. Download and unzip the training data from [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html)
 0. Download the pretrained ATnet and VGnet weights at [google drive](https://drive.google.com/drive/folders/1WYhqKBFX6mLtdJ8sYVLdWUqp5FJDmphg?usp=sharing).
 0. Preprocess the data (Extract landmark and crop the image by dlib).
@@ -71,17 +82,7 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 	- `-model_name`: pretrained weights
 	- `-sample_dir`: folder to save the outputs
 	- ...
-0. Run the demo code: `python demo.py`
-	- `-device_ids`: gpu id
-	- `-cuda`: using cuda or not
-	- `-vg_model`: pretrained VGnet weight
-	- `-at_model`: pretrained ATnet weight
-	- `-lstm`:  use lstm or not
-	- `-p`:  input example image
-	- `-i`:  input audio file
-	- `-lstm`:  use lstm or not
-	- `-sample_dir`: folder to save the outputs
-	- ...
+
 ### Model
 
 0. Overall ATVGnet
@@ -96,13 +97,13 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 
 ### Results
 
-0. Result visualization :
+0. Result visualization on different datasets:
 
 	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
 
 0. Reuslt compared with other SOTA methods:
 
-	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresultscompare.jpg)
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
 
 0. The studies on image robustness respective with landmark accuracy:
 
