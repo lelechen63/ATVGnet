@@ -17,7 +17,7 @@ University of Rochester.
 
 ### Introduction
 
-This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (http://www.cs.rochester.edu/u/lchen63/cvpr2019.pdf). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). The outputs from the model are visualized here: the first one is the synthesized landmark from ATnet, the rest of them are attention, motion map and final results from VGnet.
+This repository contains the original models (AT-net, VG-net) described in the paper [Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss](http://www.cs.rochester.edu/u/lchen63/cvpr2019.pdf). This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). The outputs from the model are visualized here: the first one is the synthesized landmark from ATnet, the rest of them are attention, motion map and final results from VGnet.
 
 ![model](https://github.com/lelechen63/ATVGnet/blob/master/img/visualization.gif)
 ![model](https://github.com/lelechen63/ATVGnet/blob/master/img/example.jpg)
@@ -123,7 +123,7 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 0. If you want to train these models using this version of pytorch without modifications, please notice that:
 	- You need at lest 12 GB GPU memory.
 	- There might be some other untested issues.
-	
+0. There is another intresting and useful research on audio to landmark genration. Please check it out at https://github.com/eeskimez/Talking-Face-Landmarks-from-Speech.	
 ### Todos
 
  - Release training data
