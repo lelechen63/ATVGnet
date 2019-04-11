@@ -39,7 +39,7 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 
 0. This code is tested under Python 2.7.
 0. Pytorch environment:[Pytorch 0.4.1](https://pytorch.org/). (conda install pytorch=0.4.1 torchvision cuda90 -c pytorch)
-0. Install requirements.txt (pip install -r requirements.txt)
+0. Install requirements.txt (pip install -r requirement.txt)
 0. Download the pretrained ATnet and VGnet weights at [google drive](https://drive.google.com/drive/folders/1WYhqKBFX6mLtdJ8sYVLdWUqp5FJDmphg?usp=sharing). Put the weights under `model` folder.
 0. Run the demo code: `python demo.py`
 	- `-device_ids`: gpu id
