@@ -54,7 +54,7 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 	- ...
 0. Download and unzip the training data from [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html)
 0. Preprocess the data (Extract landmark and crop the image by dlib).
-0. Train the ATnet model:  `python aetnet.py`
+0. Train the ATnet model:  `python atnet.py`
 	- `-device_ids`: gpu id
 	- `-batch_size`: batch size 
 	- `-model_dir`: folder to save weights
