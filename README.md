@@ -116,8 +116,8 @@ If you use any codes, models or the ideas from this repo in your research, pleas
 
 ### Disclaimer and known issues
 
-0. These codes are implmented in Pytorch
-0. In this paper, we train LRW and GRID seperately.
+0. These codes are implmented in Pytorch.
+0. In this paper, we train LRW and GRID seperately. The model we provided is trained on LRW. However, it works fine on GRID,VOXCELB and other datasets. You can directly compare this model on other dataset with your own model.
 0. The model are sensitive to input images. Please use the correct preprocessing code.
 0. I didn't finish the data processing code yet. I will release it soon. But you can try the model and replace with your own image.
 0. If you want to train these models using this version of pytorch without modifications, please notice that:
