@@ -144,6 +144,30 @@ def extract_audio():
     _extract_audio(datas[0])
 
 
+def normLmarks(lmarks):
+    norm_list = []
+    idx = -1
+    max_openness = 0.2
+    mouthParams = np.zeros((1, 100))
+    mouthParams[:, 1] = -0.06
+    tmp = deepcopy(MSK)
+    tmp[:, 48*2:] += np.dot(mouthParams, SK)[0, :, 48*2:]
+    open_mouth_params = np.reshape(np.dot(S, tmp[0, :] - MSK[0, :]), (1, 100))
+    if len(lmarks.shape) == 2:
+        lmarks = lmarks.reshape(1,68,2)
+    for i in range(lmarks.shape[0]):
+        mtx1, mtx2, disparity = procrustes(ms_img, lmarks[i, :, :])
+        mtx1 = np.reshape(mtx1, [1, 136])
+        mtx2 = np.reshape(mtx2, [1, 136])
+        norm_list.append(mtx2[0, :])
+    pred_seq = []
+    init_params = np.reshape(np.dot(S, norm_list[idx] - mtx1[0, :]), (1, 100))
+    for i in range(lmarks.shape[0]):
+        params = np.reshape(np.dot(S, norm_list[i] - mtx1[0, :]), (1, 100)) - init_params - open_mouth_params
+        predicted = np.dot(params, SK)[0, :, :] + MSK
+        pred_seq.append(predicted[0, :])
+    return np.array(pred_seq), np.array(norm_list), 1
+
 
 def get_base_mean():
 
@@ -288,6 +312,8 @@ def generating_landmark_lips(lists):
             name = temp[-2]
             preds = fa.get_landmarks(roi)[-1]
             np.save(landmark_path, preds)
+            lmark,_,_ = normLmarks( np.load(landmark_path))
+            np.save(landmark_path[-4] + '_norm.npy', lmark)
         except:
             print ((img_path, gg, last))
             continue
