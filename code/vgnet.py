@@ -162,7 +162,7 @@ class Trainer():
                     p.requires_grad = False  # to avoid computation
 
                 fake_im, att ,colors, _ = self.generator(example_img,  right_landmark, example_landmark)
-                D_fake, d_f_lmark = self.discriminator(fake_im.detach(), example_landmark)
+                D_fake, d_f_lmark = self.discriminator(fake_im, example_landmark)
 
                 loss_lmark =  self.mse_loss_fn(d_f_lmark * musk, right_landmark* musk)
                 loss_gen = self.bce_loss_fn(D_fake, self.ones)
