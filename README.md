@@ -28,8 +28,8 @@ This repository contains the original models (AT-net, VG-net) described in the p
 If you use any codes, models or the ideas from this repo in your research, please cite:
 
 	@InProceedings{Chen_2019_CVPR,
-	author = {Lele Chen, Ross K Maddox, Zhiyao Duan, Chenliang Xu},
-	title = {Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss},
+	author = {Chen, Lele and Maddox, Ross K. and Duan, Zhiyao and Xu, Chenliang},
+	title = {Hierarchical Cross-Modal Talking Face Generation With Dynamic Pixel-Wise Loss},
 	booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
 	month = {June},
 	year = {2019}
