@@ -27,14 +27,13 @@ This repository contains the original models (AT-net, VG-net) described in the p
 
 If you use any codes, models or the ideas from this repo in your research, please cite:
 
-	@InProceedings{Chen_2019_CVPR,
-	author = {Chen, Lele and Maddox, Ross K. and Duan, Zhiyao and Xu, Chenliang},
-	title = {Hierarchical Cross-Modal Talking Face Generation With Dynamic Pixel-Wise Loss},
-	booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-	month = {June},
-	year = {2019}
+	@inproceedings{chen2019hierarchical,
+	  title={Hierarchical cross-modal talking face generation with dynamic pixel-wise loss},
+	  author={Chen, Lele and Maddox, Ross K and Duan, Zhiyao and Xu, Chenliang},
+	  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+	  pages={7832--7841},
+	  year={2019}
 	}
-	
 ### Running
 
 0. This code is tested under Python 2.7. The model we provided is trained on LRW. However, it works fine on GRID,VOXCELB and other datasets. You can directly compare this model on other dataset with your own model. We treat this as fair comparison.
