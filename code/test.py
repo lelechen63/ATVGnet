@@ -277,9 +277,9 @@ def test():
             # fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
             # utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
             video_name = os.path.join(config.sample_dir , video_name + '.mp4')
-            ffmpeg.input('../temp/*.png', pattern_type='glob', framerate=25).output(video_name).run()
+            # ffmpeg.input('../temp/*.png', pattern_type='glob', framerate=25).output(video_name).run()
 
-            # utils.image_to_video(os.path.join('../', 'temp'), video_name )
+            utils.image_to_video(os.path.join('../', 'temp'), video_name + '.mp4' )
             utils.add_audio(video_name, config.in_file)
             print ('The generated video is: {}'.format(os.path.join(config.sample_dir , video_name + '.mov')))
         
