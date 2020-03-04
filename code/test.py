@@ -210,7 +210,7 @@ def test():
         print (video_name, image_path)
         cap = cv2.VideoCapture(video_file)
         imgs = []
-        count == 0
+        count = 0
         while(cap.isOpened()):
             count += 1
             ret, frame = cap.read()
