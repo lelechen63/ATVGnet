@@ -287,7 +287,7 @@ def test():
             # ffmpeg.input('../temp/*.png', pattern_type='glob', framerate=25).output(video_name).run()
 
             utils.image_to_video(os.path.join('../', 'temp'), video_name + '.mp4' )
-            utils.add_audio(video_name, config.in_file)
+            utils.add_audio(video_name + '.mp4', config.in_file)
             print ('The generated video is: {}'.format(os.path.join(config.sample_dir , video_name + '.mov')))
         
 
