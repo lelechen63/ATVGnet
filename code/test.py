@@ -22,7 +22,7 @@ import python_speech_features
 from skimage import transform as tf
 from copy import deepcopy
 from scipy.spatial import procrustes
-import ffmpeg
+# import ffmpeg
 import dlib
 
 def parse_args():
