@@ -204,7 +204,7 @@ def test():
         
         test_file = audio_file
         image_path = video_file
-        video_name = image_path.split('/')[-1][:-4]
+        video_name = f[:7] + '__'  + f[8:-14] +'__' + image_path.split('/')[-1][:-4]
         image_path = os.path.join('../image', video_name + '.jpg')
         print (video_name, image_path)
         cap = cv2.VideoCapture(video_file)
