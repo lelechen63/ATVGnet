@@ -201,15 +201,22 @@ def test():
     for i in range(len(audios)):
         audio_file = audios[i]
         video_file = videos[i]
-
+        
         test_file = audio_file
         image_path = video_file
-
         video_name = image_path.split('/')[-1][:-4]
-
-
-
-        example_image, example_landmark = generator_demo_example_lips( config.person)
+        image_path = os.path.join('../image', video_name + '.jpg')
+        print (video_name, image_path)
+        cap = cv2.VideoCapture(video_file)
+        imgs = []
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            cv2.imwrite(image_path, frame)
+            try:
+                example_image, example_landmark = generator_demo_example_lips(image_path)
+            except:
+                continue
+            break
         transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
