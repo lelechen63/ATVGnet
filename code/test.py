@@ -193,8 +193,9 @@ def test():
     audios = []
     videos = []
     for f in files:
-        audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}.wav'.format(f.split('_')[-2])))
-        videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
+        if f[:7] == 'id00817' or f[:7] == 'id00866':
+            audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}.wav'.format(f.split('_')[-2])))
+            videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
 
 
 
@@ -204,7 +205,7 @@ def test():
         
         test_file = audio_file
         image_path = video_file
-        video_name = f[:7] + '__'  + f[8:-14] +'__' + image_path.split('/')[-1][:-4]
+        video_name = image_path.split('/')[-3] + '__'  + image_path.split('/')[-2] +'__' + image_path.split('/')[-1][:-4]
         image_path = os.path.join('../image', video_name + '.jpg')
         print (video_name, image_path)
         cap = cv2.VideoCapture(video_file)
