@@ -45,20 +45,20 @@ def parse_args():
                         default=True)
     parser.add_argument("--dataset_dir",
                         type=str,
-                        default="/mnt/ssd0/dat/lchen63/lrw/data/pickle/")
+                        default="../dataset/")
                         # default="/mnt/disk1/dat/lchen63/lrw/data/pickle/")
                         # default = '/media/lele/DATA/lrw/data2/pickle')
     parser.add_argument("--model_name",
                         type=str,
-                        default="/u/lchen63/lrw/model/audio2lmark_pca/audio2lmark_24.pth")
+                        default="../model/atnet/audio2lmark_24.pth")
                         # default="/mnt/disk1/dat/lchen63/lrw/model/model_gan_r2/r_generator_38.pth")
                         # default='/media/lele/DATA/lrw/data2/model')
     parser.add_argument("--sample_dir",
                         type=str,
-                        default="/u/lchen63/lrw/sample/demo_test/")
+                        default="../sample/atnet_test/")
                         # default="/mnt/disk1/dat/lchen63/lrw/test_result/model_gan_r2/")
                         # default='/media/lele/DATA/lrw/data2/sample/lstm_gan')
-    parser.add_argument('--device_ids', type=str, default='3')
+    parser.add_argument('--device_ids', type=str, default='0')
     parser.add_argument('--dataset', type=str, default='lrw')
     parser.add_argument('--lstm', type=bool, default=True)
     parser.add_argument('--num_thread', type=int, default=1)

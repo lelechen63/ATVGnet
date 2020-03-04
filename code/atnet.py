@@ -227,17 +227,17 @@ def parse_args():
                         default=True)
     parser.add_argument("--dataset_dir",
                         type=str,
-                        default="/mnt/ssd0/dat/lchen63/lrw/data/pickle/")
+                        default="../dataset/")
                         # default="/mnt/ssd0/dat/lchen63/grid/pickle/")
                         # default = '/media/lele/DATA/lrw/data2/pickle')
     parser.add_argument("--model_dir",
                         type=str,
-                        default="/u/lchen63/lrw/sample/demo/")
+                        default="../model/atnet/")
                         # default="/mnt/disk1/dat/lchen63/grid/model/model_gan_r")
                         # default='/media/lele/DATA/lrw/data2/model')
     parser.add_argument("--sample_dir",
                         type=str,
-                        default="/u/lchen63/lrw/sample/demo/")
+                        default="../sample/atnet/")
                         # default="/mnt/disk1/dat/lchen63/grid/sample/model_gan_r/")
                         # default='/media/lele/DATA/lrw/data2/sample/lstm_gan')
     parser.add_argument('--device_ids', type=str, default='0')

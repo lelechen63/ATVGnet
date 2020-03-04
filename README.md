@@ -1,4 +1,4 @@
-# Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss （ATVGnet）
+## Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss （ATVGnet）
 
 By [Lele Chen](http://www.cs.rochester.edu/u/lchen63/) ,
 [Ross K Maddox](https://www.urmc.rochester.edu/labs/maddox.aspx),
@@ -12,102 +12,122 @@ University of Rochester.
 0. [Citation](#citation)
 0. [Running](#running)
 0. [Model](#model)
-0. [Disclaimer and known issues](#disclaimer-and-known-issues)
 0. [Results](#results)
+0. [Disclaimer and known issues](#disclaimer-and-known-issues)
 
 ### Introduction
 
-This repository contains the original models (AT-net, VG-net) described in the paper "Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss" (https://arxiv.org/abs/1802.02427). This code can be applied directly in [BTRAS2017](http://braintumorsegmentation.org/). 
+This repository contains the original models (AT-net, VG-net) described in the paper [Hierarchical Cross-modal Talking Face Generation with Dynamic Pixel-wise Loss](http://www.cs.rochester.edu/u/lchen63/cvpr2019.pdf). The **demo video** is avaliable at https://youtu.be/eH7h_bDRX2Q. This code can be applied directly in [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [GRID](http://spandh.dcs.shef.ac.uk/gridcorpus/). The outputs from the model are visualized here: the first one is the synthesized landmark from ATnet, the rest of them are attention, motion map and final results from VGnet.
 
-![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/spie.gif)
+![model](https://github.com/lelechen63/ATVGnet/blob/master/img/visualization.gif)
+![model](https://github.com/lelechen63/ATVGnet/blob/master/img/example.jpg)
 
 
 ### Citation
 
-If you use these models or the ideas in your research, please cite:
-	
-	@inproceedings{DBLP:conf/miip/ChenWDAWX18,
-	  author    = {Lele Chen and
-		       Yue Wu and
-		       Adora M. DSouza and
-		       Anas Z. Abidin and
-		       Axel Wism{\"{u}}ller and
-		       Chenliang Xu},
-	  title     = {{MRI} tumor segmentation with densely connected 3D {CNN}},
-	  booktitle = {Medical Imaging 2018: Image Processing, Houston, Texas, United States,
-		       10-15 February 2018},
-	  pages     = {105741F},
-	  year      = {2018},
-	  crossref  = {DBLP:conf/miip/2018},
-	  url       = {https://doi.org/10.1117/12.2293394},
-	  doi       = {10.1117/12.2293394},
-	  timestamp = {Tue, 06 Mar 2018 10:50:01 +0100},
-	  biburl    = {https://dblp.org/rec/bib/conf/miip/ChenWDAWX18},
-	  bibsource = {dblp computer science bibliography, https://dblp.org}
+If you use any codes, models or the ideas from this repo in your research, please cite:
+
+	@inproceedings{chen2019hierarchical,
+	  title={Hierarchical cross-modal talking face generation with dynamic pixel-wise loss},
+	  author={Chen, Lele and Maddox, Ross K and Duan, Zhiyao and Xu, Chenliang},
+	  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+	  pages={7832--7841},
+	  year={2019}
 	}
 ### Running
 
-
-0. Pre-installation:[Tensorflow](https://www.tensorflow.org/install/),[Ants](https://github.com/ANTsX/ANTs),[nibabel](http://nipy.org/nibabel/),[sklearn](http://scikit-learn.org/stable/),[numpy](http://www.numpy.org/)
-
-0. Download and unzip the training data from [BTRAS2017](http://braintumorsegmentation.org/)
-
-0. Use N4ITK to correct the data: `python n4correction.py /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
-0. Train the model:  `python train.py`
-	- `-gpu`: gpu id
-	- `-bs`: batch size 
-	- `-mn`: model name, 'dense24' or 'dense48' or 'no-dense' or 'dense24_nocorrection'
-	- `-nc`:  [n4ITK bias correction](https://www.ncbi.nlm.nih.gov/pubmed/20378467),True or False
-	- `-e`: epoch number 
-	- `-r`: data path
-	- `-sp`: save path/name
+0. This code is tested under Python 2.7. The model we provided is trained on LRW. However, it works fine on GRID,VOXCELB and other datasets. You can directly compare this model on other dataset with your own model. We treat this as fair comparison.
+0. Pytorch environment:[Pytorch 0.4.1](https://pytorch.org/). (conda install pytorch=0.4.1 torchvision cuda90 -c pytorch)
+0. Install requirements.txt (pip install -r requirement.txt)
+0. Download the pretrained ATnet and VGnet weights at [google drive](https://drive.google.com/drive/folders/1WYhqKBFX6mLtdJ8sYVLdWUqp5FJDmphg?usp=sharing). Put the weights under `model` folder.
+0. Run the demo code: `python demo.py`
+	- `-device_ids`: gpu id
+	- `-cuda`: using cuda or not
+	- `-vg_model`: pretrained VGnet weight
+	- `-at_model`: pretrained ATnet weight
+	- `-lstm`:  use lstm or not
+	- `-p`:  input example image
+	- `-i`:  input audio file
+	- `-lstm`:  use lstm or not
+	- `-sample_dir`: folder to save the outputs
+	- ...
+0. Download and unzip the training data from [LRW](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html)
+0. Preprocess the data (Extract landmark and crop the image by dlib).
+0. Train the ATnet model:  `python atnet.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size 
+	- `-model_dir`: folder to save weights
+	- `-lstm`:  use lstm or not
+	- `-sample_dir`: folder to save visualized images during training
 	- ...
 
-For example:
-`python train.py -bs 2 -gpu 0  -mn dense24 -nc True -sp dense48_correction -e 5  -r /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
 
-0. Test the model: `python test.py`
-	- `-gpu`: gpu id
-	- `-m`: model path, the saved model name
-	- `-mn`: model name, 'dense24' or 'dense48' or 'no-dense' or 'dense24_nocorrection'
-	- `-nc`:  [n4ITK bias correction](https://www.ncbi.nlm.nih.gov/pubmed/20378467), True or False
-	- `-r`: data path
+0. Test the model: `python atnet_test.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size
+	- `-model_name`: pretrained weights
+	- `-sample_dir`: folder to save the outputs
+	- `-lstm`:  use lstm or not
 	- ...
-
-For example:
-`python test.py -m Dense24_correction-2 -mn dense24 -gpu 0 -nc True  -r /mnt/disk1/dat/lchen63/spie/Brats17TrainingData/HGG`
-
+0. Train the VGnet:	`python vgnet.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size 
+	- `-model_dir`: folder to save weights
+	- `-sample_dir`: folder to save visualized images during training
+	- ...
+0. Test the VGnet: 	`python vgnet_test.py`
+	- `-device_ids`: gpu id
+	- `-batch_size`: batch size
+	- `-model_name`: pretrained weights
+	- `-sample_dir`: folder to save the outputs
+	- ...
 
 ### Model
 
-0. Hierarchical segmentation
-	![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/2.png)
+0. Overall ATVGnet
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/generator.png)
 
 	
-0. 3D densely connected CNN
+0. Regresssion based discriminator network
 
-	![model](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/1.png)
-
-### Disclaimer and known issues
-
-0. These codes are implmented in Tensorflow
-0. In this paper, we only use the glioblastoma (HGG) dataset.
-0. I didn't config nipype.interfaces.ants.segmentation. So if you need to use `n4correction.py` code, you need to copy it to the bin directory where antsRegistration etc are located. Then run `python n4correction.py`
-0. If you want to train these models using this version of tensorflow without modifications, please notice that:
-	- You need at lest 12 GB GPU memory.
-	- There might be some other untested issues.
+	![model](https://github.com/lelechen63/ATVGnet/blob/master/img/regress-disc.jpg)
+	
 	
 
 ### Results
-0. Result visualization :
-	![visualization](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/h.png)
-	![visualization](https://github.com/lelechen63/MRI-tumor-segmentation-Brats/blob/master/image/v.png)
+
+0. Result visualization on different datasets:
+
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/compare.jpg)
+
+0. Reuslt compared with other SOTA methods:
+
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/visualresults.jpg)
+
+0. The studies on image robustness respective with landmark accuracy:
+
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/noise.png)
 
 0. Quantitative results:
 
-	model|whole|peritumoral edema (ED)|FGD-enhan. tumor (ET)
-	:---:|:---:|:---:|:---:
-	Dense24 |0.74| 0.81| 0.80
-	Dense48 | 0.61|0.78|0.79
-	no-dense|0.61|0.77|0.78
-	dense24+n4correction|0.72|0.83|0.81
+	![visualization](https://github.com/lelechen63/ATVGnet/blob/master/img/userstudy.jpg)
+	
+
+### Disclaimer and known issues
+
+0. These codes are implmented in Pytorch.
+0. In this paper, we train LRW and GRID seperately. 
+0. The model are sensitive to input images. Please use the correct preprocessing code.
+0. I didn't finish the data processing code yet. I will release it soon. But you can try the model and replace with your own image.
+0. If you want to train these models using this version of pytorch without modifications, please notice that:
+	- You need at lest 12 GB GPU memory.
+	- There might be some other untested issues.
+0. There is another intresting and useful research on audio to landmark genration. Please check it out at https://github.com/eeskimez/Talking-Face-Landmarks-from-Speech.	
+### Todos
+
+ - Release training data
+
+License
+----
+
+MIT
