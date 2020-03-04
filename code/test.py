@@ -193,7 +193,7 @@ def test():
     audios = []
     videos = []
     for f in files:
-        if f[:7] == 'id00817' or f[:7] == 'id00866':
+        if f[:7] == 'id00817' :
             audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}.wav'.format(f.split('_')[-2])))
             videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
 
@@ -210,9 +210,14 @@ def test():
         print (video_name, image_path)
         cap = cv2.VideoCapture(video_file)
         imgs = []
+        count == 0
         while(cap.isOpened()):
+            count += 1
             ret, frame = cap.read()
-            cv2.imwrite(image_path, frame)
+            if count != 33:
+                continue
+            else:
+                cv2.imwrite(image_path, frame)
             try:
                 example_image, example_landmark = generator_demo_example_lips(image_path)
             except:
