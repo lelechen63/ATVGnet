@@ -185,11 +185,27 @@ def test():
 
     encoder.eval()
     decoder.eval()
-    for i in txt_file:
-        test_file = txt_file.audio_path
-        image_path = txt_file.image_path
 
-        video_name = image_path.split('/')[-1]
+    # get file paths
+    path = '/home/cxu-serve/p1/common/experiment/vox_good'
+    files = os.listdir(path)
+    data_root = '/home/cxu-serve/p1/common/voxceleb2/unzip/'
+    audios = []
+    videos = []
+    for f in files:
+        audios.append(os.path.join(data_root, 'test_audio' f[:7], f[8:-14], '{}_aligned.wav'.format(f.split('_')[-2])))
+        videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
+
+
+
+    for i in range(len(audios)):
+        audio_file = audios[i]
+        video_file = videos[i]
+
+        test_file = audio_file
+        image_path = video_file
+
+        video_name = image_path.split('/')[-1][:-4]
 
 
 
