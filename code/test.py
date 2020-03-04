@@ -193,7 +193,7 @@ def test():
     audios = []
     videos = []
     for f in files:
-        audios.append(os.path.join(data_root, 'test_audio' f[:7], f[8:-14], '{}_aligned.wav'.format(f.split('_')[-2])))
+        audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}_aligned.wav'.format(f.split('_')[-2])))
         videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
 
 
