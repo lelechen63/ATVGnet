@@ -283,7 +283,7 @@ def test():
             # np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
             # fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
             # utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
-            video_name = os.path.join(config.sample_dir , video_name + '.mp4')
+            video_name = os.path.join(config.sample_dir , video_name )
             # ffmpeg.input('../temp/*.png', pattern_type='glob', framerate=25).output(video_name).run()
 
             utils.image_to_video(os.path.join('../', 'temp'), video_name + '.mp4' )
