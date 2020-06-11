@@ -105,6 +105,7 @@ venv.bak/
 ./image/*
 ./img/*
 ./model/*
+./temp/*
 # End of https://www.gitignore.io/api/python
 ./.git/objects/pack/pack-79fdf3619a98ef853471f41eaa2af28f68b0c0a4.pack
 ./.git/objects/2e/bf9957f5edca74534a0e60f2f98f0af14a5577
