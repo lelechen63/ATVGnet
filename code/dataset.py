@@ -334,7 +334,6 @@ class LRWdataset1D_lstm_gt(data.Dataset):
                     right_img[jj,:,:,:] = torch.FloatTensor(im)
 
 
-
                 landmark = np.load(landmark_path) * 5.0
 
                 right_landmark = landmark[self.train_data[index][1] - 1 : self.train_data[index][1] + 15  ]

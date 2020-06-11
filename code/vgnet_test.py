@@ -146,5 +146,4 @@ def test():
 				    scipy.misc.imsave("{}single/real_{}.png".format(config.sample_dir,step*config.batch_size * 16+inx),real_store[inx])
 			   
 
-
 test()

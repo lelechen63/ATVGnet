@@ -24,7 +24,9 @@ from copy import deepcopy
 from scipy.spatial import procrustes
 # import ffmpeg
 import dlib
-
+import csv
+import face_alignment
+fa = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D, device='cuda:0')
 def parse_args():
     parser = argparse.ArgumentParser()
 
@@ -44,7 +46,7 @@ def parse_args():
                      default="../model/atnet_lstm_18.pth")
     parser.add_argument( "--sample_dir",
                     type=str,
-                    default="../results")
+                    default="/home/cxu-serve/p1/common/degree/vox_results/atvg_extra")
                     # default='/media/lele/DATA/lrw/data2/sample/lstm_gan')test
     parser.add_argument('-i','--in_file', type=str, default='../audio/test.wav')
     parser.add_argument('-d','--data_path', type=str, default='../basics')
@@ -100,28 +102,38 @@ def normLmarks(lmarks):
         predicted = np.dot(params, SK)[0, :, :] + MSK
         pred_seq.append(predicted[0, :])
     return np.array(pred_seq), np.array(norm_list), 1
-   
+ 
+
+def get_box(array):
+    print (array.shape)
+    
+    x_max = np.amax(array[:,0],0)
+    x_min = np.amin(array[:,0],0)
+    y_max = np.amax(array[:,1],0)
+    y_min = np.amin(array[:,1],0)
+    print ('=========')
+    print (x_min, x_max, y_min, y_max)
+    return (x_min, x_max, y_min, y_max)
 def crop_image(image_path):
     image = cv2.imread(image_path)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    rects = detector(gray, 1)
-    for (i, rect) in enumerate(rects):
-        shape = predictor(gray, rect)
-        shape = utils.shape_to_np(shape)
-        (x, y, w, h) = utils.rect_to_bb(rect)
-        center_x = x + int(0.5 * w)
-        center_y = y + int(0.5 * h)
-        r = int(0.64 * h)
-        new_x = center_x - r
-        new_y = center_y - r
-        roi = image[new_y:new_y + 2 * r, new_x:new_x + 2 * r]
+    shape = fa.get_landmarks(image)[0]
+     
+    (x_min, x_max, y_min, y_max) = get_box(shape)
+    center_x = np.mean(shape[:,0])
+    center_y = np.mean(shape[:,1])
+    h = max(x_max - x_min, y_max - y_min)
+    r = int(0.64 * h)
+    new_x = int(center_x - r)
+    new_y = int(center_y - r)
+    print (new_x, r)
+    roi = image[new_y:new_y + 2 * r, new_x:new_x + 2 * r]
 
-        roi = cv2.resize(roi, (163,163), interpolation = cv2.INTER_AREA)
-        scale =  163. / (2 * r)
+    roi = cv2.resize(roi, (163,163), interpolation = cv2.INTER_AREA)
+    scale =  163. / (2 * r)
 
-        shape = ((shape - np.array([new_x,new_y])) * scale)
+    shape = ((shape - np.array([new_x,new_y])) * scale)
 
-        return roi, shape 
+    return roi, shape 
 def generator_demo_example_lips(img_path):
     name = img_path.split('/')[-1]
     landmark_path = os.path.join('../image/', name.replace('jpg', 'npy')) 
@@ -148,22 +160,34 @@ def generator_demo_example_lips(img_path):
     cv2.imwrite(region_path, dst)
 
 
-    gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
+    shape = fa.get_landmarks(dst)[0]
 
-    # detect faces in the grayscale image
-    rects = detector(gray, 1)
-    for (i, rect) in enumerate(rects):
+        
+    shape, _ ,_ = normLmarks(shape)
+    np.save(landmark_path, shape)
+    lmark= shape.reshape(68,2)
+    name = region_path.replace('region.jpg','lmark.png')
 
-        shape = predictor(gray, rect)
-        shape = utils.shape_to_np(shape)
-        shape, _ ,_ = normLmarks(shape)
-        np.save(landmark_path, shape)
-        lmark= shape.reshape(68,2)
-        name = region_path.replace('region.jpg','lmark.png')
-
-        utils.plot_flmarks(lmark, name, (-0.2, 0.2), (-0.2, 0.2), 'x', 'y', figsize=(10, 10))
+    #utils.plot_flmarks(lmark, name, (-0.2, 0.2), (-0.2, 0.2), 'x', 'y', figsize=(10, 10))
     return dst, lmark
 def test():
+    data_root = '/home/cxu-serve/p1/common/voxceleb2/unzip/test_video/'
+    #data_root = '/home/cxu-serve/p1/common/lrs3/lrs3_v0.4/'
+    audios = []
+    videos = []
+    start_ids =[]
+    end_ids = [] 
+    with open('/home/cxu-serve/p1/common/degree/degree_store/vox/new_extra_data.csv', 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:	
+            #print (row)
+            audios.append(row[1])
+            videos.append(row[0])
+            start_ids.append(int(row[2]))
+            end_ids.append(int(row[3]))
+            #audios.append(os.path.join(data_root, 'test',tmp[1], tmp[2] + '.wav'))
+            #videos.append(os.path.join(data_root, 'test', tmp[1], tmp[2] + '_crop.mp4'))
+    #print (gg)
     os.environ["CUDA_VISIBLE_DEVICES"] = config.device_ids
     if os.path.exists('../temp'):
         shutil.rmtree('../temp')
@@ -186,116 +210,151 @@ def test():
     encoder.eval()
     decoder.eval()
 
-    # get file paths
-    path = '/home/cxu-serve/p1/common/experiment/vox_good'
-    files = os.listdir(path)
-    data_root = '/home/cxu-serve/p1/common/voxceleb2/unzip/'
-    audios = []
-    videos = []
-    for f in files:
-        if f[:7] == 'id00817' :
-            audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}.wav'.format(f.split('_')[-2])))
-            videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
+    # vox
+    # # get file paths
+    # path = '/home/cxu-serve/p1/common/experiment/vox_good'
+    # files = os.listdir(path)
+    # data_root = '/home/cxu-serve/p1/common/voxceleb2/unzip/'
+    # audios = []
+    # videos = []
+    # for f in files:
+    #     if f[:7] == 'id00817' :
+    #         audios.append(os.path.join(data_root, 'test_audio', f[:7], f[8:-14], '{}.wav'.format(f.split('_')[-2])))
+    #         videos.append(os.path.join(data_root, 'test_video', f[:7], f[8:-14], '{}_aligned.mp4'.format(f.split('_')[-2])))
 
+
+
+    # for i in range(len(audios)):
+    #     audio_file = audios[i]
+    #     video_file = videos[i]
+        
+    #     test_file = audio_file
+    #     image_path = video_file
+    #     video_name = image_path.split('/')[-3] + '__'  + image_path.split('/')[-2] +'__' + image_path.split('/')[-1][:-4]
+    
+    # get file paths
+    #path = '/home/cxu-serve/p1/common/other/lrs_good2'
+    #files = os.listdir(path)
+    
+    #for f in files:
+    #    print (f)
+    #    if f[:4] !='test':
+    #        continue
+    #    tmp = f.split('_')#
+
+        # if f[:7] == 'id00817' :
+
+
+        
 
 
     for i in range(len(audios)):
-        audio_file = audios[i]
-        video_file = videos[i]
+        try:
+            audio_file = audios[i]
+            video_file = videos[i]
+
+            test_file = audio_file
+            image_path = video_file
+            video_name =  video_file.split('/')[-1][:-4] +'_' +str( start_ids[i])
+        #image_path = os.path.join('../image', video_name + '.jpg')
+        #print (video_name, image_path)
+        #cap = cv2.VideoCapture(video_file)
+        #imgs = []
+        #count = 0
+        #while(cap.isOpened()):
+        #    count += 1
+        #    ret, frame = cap.read()
+        #    if count != 33:
+        #        continue
+         #   else:
+        #        cv2.imwrite(image_path, frame)
+        #    try:
+        #        example_image, example_landmark = generator_demo_example_lips(image_path)
+        #    except:
+        #        continue
+        #    break
+
+            example_image, example_landmark = generator_demo_example_lips(image_path)
         
-        test_file = audio_file
-        image_path = video_file
-        video_name = image_path.split('/')[-3] + '__'  + image_path.split('/')[-2] +'__' + image_path.split('/')[-1][:-4]
-        image_path = os.path.join('../image', video_name + '.jpg')
-        print (video_name, image_path)
-        cap = cv2.VideoCapture(video_file)
-        imgs = []
-        count = 0
-        while(cap.isOpened()):
-            count += 1
-            ret, frame = cap.read()
-            if count != 33:
-                continue
+            transform = transforms.Compose([
+               transforms.ToTensor(),
+               transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+               ])        
+            example_image = cv2.cvtColor(example_image, cv2.COLOR_BGR2RGB)
+            example_image = transform(example_image)
+
+            example_landmark =  example_landmark.reshape((1,example_landmark.shape[0]* example_landmark.shape[1]))
+
+            if config.cuda:
+                example_image = Variable(example_image.view(1,3,128,128)).cuda()
+                example_landmark = Variable(torch.FloatTensor(example_landmark.astype(float)) ).cuda()
             else:
-                cv2.imwrite(image_path, frame)
-            try:
-                example_image, example_landmark = generator_demo_example_lips(image_path)
-            except:
-                continue
-            break
-        transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
-         ])        
-        example_image = cv2.cvtColor(example_image, cv2.COLOR_BGR2RGB)
-        example_image = transform(example_image)
-
-        example_landmark =  example_landmark.reshape((1,example_landmark.shape[0]* example_landmark.shape[1]))
-
-        if config.cuda:
-            example_image = Variable(example_image.view(1,3,128,128)).cuda()
-            example_landmark = Variable(torch.FloatTensor(example_landmark.astype(float)) ).cuda()
-        else:
-            example_image = Variable(example_image.view(1,3,128,128))
-            example_landmark = Variable(torch.FloatTensor(example_landmark.astype(float)))
+                example_image = Variable(example_image.view(1,3,128,128))
+                example_landmark = Variable(torch.FloatTensor(example_landmark.astype(float)))
         # Load speech and extract features
-        example_landmark = example_landmark * 5.0
-        example_landmark  = example_landmark - mean.expand_as(example_landmark)
-        example_landmark = torch.mm(example_landmark,  pca)
-        speech, sr = librosa.load(test_file, sr=16000)
-        mfcc = python_speech_features.mfcc(speech ,16000,winstep=0.01)
-        speech = np.insert(speech, 0, np.zeros(1920))
-        speech = np.append(speech, np.zeros(1920))
-        mfcc = python_speech_features.mfcc(speech,16000,winstep=0.01)
+            example_landmark = example_landmark * 5.0
+            example_landmark  = example_landmark - mean.expand_as(example_landmark)
+            example_landmark = torch.mm(example_landmark,  pca)
+            speech, sr = librosa.load(audio_file, sr=16000)
+            mfcc = python_speech_features.mfcc(speech ,16000,winstep=0.01)
+            speech = np.insert(speech, 0, np.zeros(1920))
+            speech = np.append(speech, np.zeros(1920))
+            mfcc = python_speech_features.mfcc(speech,16000,winstep=0.01)
 
         # print (mfcc.shape)
 
-        sound, _ = librosa.load(test_file, sr=44100)
+        #sound, _ = librosa.load(test_file, sr=44100)
 
-        print ('=======================================')
-        print ('Start to generate images')
-        t =time.time()
-        ind = 3
-        with torch.no_grad(): 
-            fake_lmark = []
-            input_mfcc = []
-            while ind <= int(mfcc.shape[0]/4) - 4:
-                t_mfcc =mfcc[( ind - 3)*4: (ind + 4)*4, 1:]
-                t_mfcc = torch.FloatTensor(t_mfcc).cuda()
-                input_mfcc.append(t_mfcc)
-                ind += 1
-            input_mfcc = torch.stack(input_mfcc,dim = 0)
-            input_mfcc = input_mfcc.unsqueeze(0)
-            fake_lmark = encoder(example_landmark, input_mfcc)
-            fake_lmark = fake_lmark.view(fake_lmark.size(0) *fake_lmark.size(1) , 6)
-            example_landmark  = torch.mm( example_landmark, pca.t() ) 
-            example_landmark = example_landmark + mean.expand_as(example_landmark)
-            fake_lmark[:, 1:6] *= 2*torch.FloatTensor(np.array([1.1, 1.2, 1.3, 1.4, 1.5])).cuda() 
-            fake_lmark = torch.mm( fake_lmark, pca.t() )
-            fake_lmark = fake_lmark + mean.expand_as(fake_lmark)
+            print ('=======================================')
+            print ('Start to generate images')
+            t =time.time()
+            ind = 3
+            with torch.no_grad(): 
+                fake_lmark = []
+                input_mfcc = []
+
+                while ind <= int(mfcc.shape[0]/4) - 4:
+                    t_mfcc =mfcc[( ind - 3)*4: (ind + 4)*4, 1:]
+                    t_mfcc = torch.FloatTensor(t_mfcc).cuda()
+                    if ind >= start_ids[i] and ind < end_ids[i]:
+                        input_mfcc.append(t_mfcc)
+                    ind += 1
+            
+            
+                input_mfcc = torch.stack(input_mfcc,dim = 0)
+                input_mfcc = input_mfcc.unsqueeze(0)
+                print (input_mfcc.shape)
+                fake_lmark = encoder(example_landmark, input_mfcc)
+                fake_lmark = fake_lmark.view(fake_lmark.size(0) *fake_lmark.size(1) , 6)
+                example_landmark  = torch.mm( example_landmark, pca.t() ) 
+                example_landmark = example_landmark + mean.expand_as(example_landmark)
+                fake_lmark[:, 1:6] *= 2*torch.FloatTensor(np.array([1.1, 1.2, 1.3, 1.4, 1.5])).cuda() 
+                fake_lmark = torch.mm( fake_lmark, pca.t() )
+                fake_lmark = fake_lmark + mean.expand_as(fake_lmark)
         
 
-            fake_lmark = fake_lmark.unsqueeze(0) 
+                fake_lmark = fake_lmark.unsqueeze(0) 
 
-            fake_ims, _ ,_,_ = decoder(example_image, fake_lmark, example_landmark )
-
-            for indx in range(fake_ims.size(1)):
-                fake_im = fake_ims[:,indx]
-                fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
-                scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp') ,indx ), fake_store)
-            print (time.time() - t)
-            fake_lmark = fake_lmark.data.cpu().numpy()
+                fake_ims, _ ,_,_ = decoder(example_image, fake_lmark, example_landmark )
+                os.system('rm ../temp/*')
+                for indx in range(fake_ims.size(1)):
+                    fake_im = fake_ims[:,indx]
+                    fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
+                    scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp') ,indx ), fake_store)
+                print (time.time() - t)
+                fake_lmark = fake_lmark.data.cpu().numpy()
             # os.system('rm ../results/*')
             # np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
             # fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
             # utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
-            video_name = os.path.join(config.sample_dir , video_name )
+                video_name = os.path.join(config.sample_dir , video_name )
             # ffmpeg.input('../temp/*.png', pattern_type='glob', framerate=25).output(video_name).run()
 
-            utils.image_to_video(os.path.join('../', 'temp'), video_name + '.mp4' )
-            utils.add_audio(video_name + '.mp4', config.in_file)
-            print ('The generated video is: {}'.format(os.path.join(config.sample_dir , video_name + '.mov')))
-        
+                utils.image_to_video(os.path.join('../', 'temp'), video_name + '.mp4' )
+                utils.add_audio(video_name + '.mp4', audio_file)
+                print ('The generated video is: {}'.format(os.path.join(config.sample_dir , video_name + '.mov')))
+        except:
+             continue
 
 test()
 
