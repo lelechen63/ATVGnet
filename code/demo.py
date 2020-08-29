@@ -49,6 +49,7 @@ def parse_args():
     parser.add_argument('-i','--in_file', type=str, default='../audio/test.wav')
     parser.add_argument('-d','--data_path', type=str, default='../basics')
     parser.add_argument('-p','--person', type=str, default='../image/musk1.jpg')
+    parser.add_argument('-s','--save_name', type=str, default='results')
     parser.add_argument('--device_ids', type=str, default='2')
     parser.add_argument('--num_thread', type=int, default=1)   
     return parser.parse_args()
@@ -243,7 +244,7 @@ def test():
         fake_lmark = fake_lmark.unsqueeze(0) 
 
         fake_ims, atts ,ms ,_ = decoder(example_image, fake_lmark, example_landmark )
-
+        
         for indx in range(fake_ims.size(1)):
             fake_im = fake_ims[:,indx]
             fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
@@ -257,15 +258,15 @@ def test():
             scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'attention') ,indx ), att)
 
         print ( 'In total, generate {:d} images, cost time: {:03f} seconds'.format(fake_ims.size(1), time.time() - t) )
-            
+        save_name = config.save_name
         fake_lmark = fake_lmark.data.cpu().numpy()
         np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
         fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
         #utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
-        video_name = os.path.join(config.sample_dir , 'results.mp4')
+        video_name = os.path.join(config.sample_dir , '%s.mp4'%save_name)
         utils.image_to_video(os.path.join('../', 'temp', 'img'), video_name )
         utils.add_audio(video_name, config.in_file)
-        print ('The generated video is: {}'.format(os.path.join(config.sample_dir , 'results.mov')))
+        print ('The generated video is: {}'.format(os.path.join(config.sample_dir , '%s.mov'%save_name)))
         
 
 test()
