@@ -19,6 +19,7 @@ def main():
             save_name = audio[:-4] + '__' +  imge + '__1.jpg'
             command = 'python demo.py -i ' + audio_path + ' -p ' + image_path + '  -s ' + save_name
             print  (command)
+            os.system(command)
             #python demo.py  -i ../dataset/test_data/test_audio/angry_yousefu_00034.wav -p ../dataset/test_data/test_image/yousef/1.jpg -s angry_yousefu_00034__1
 
 main()
