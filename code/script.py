@@ -3,7 +3,7 @@ import os
 def main():
     audio_list = os.listdir('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_audio')  
     
-    image_list = audio_list = os.listdir('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_image')
+    image_list  = os.listdir('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_image')
     
     for imge in image_list:
         image_path = os.path.join('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_image', imge, '1.jpg')
