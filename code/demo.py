@@ -158,7 +158,7 @@ def generator_demo_example_lips(img_path):
         shape, _ ,_ = normLmarks(shape)
         np.save(landmark_path, shape)
         lmark= shape.reshape(68,2)
-        name = region_path.replace('region.jpg','lmark.png')
+        name = img_path[:-4] + 'lmark.png'
 
         utils.plot_flmarks(lmark, name, (-0.2, 0.2), (-0.2, 0.2), 'x', 'y', figsize=(10, 10))
     return dst, lmark
@@ -261,7 +261,7 @@ def test():
         fake_lmark = fake_lmark.data.cpu().numpy()
         np.save( os.path.join( config.sample_dir,  'obama_fake.npy'), fake_lmark)
         fake_lmark = np.reshape(fake_lmark, (fake_lmark.shape[1], 68, 2))
-        utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
+        #utils.write_video_wpts_wsound(fake_lmark, sound, 44100, config.sample_dir, 'fake', [-1.0, 1.0], [-1.0, 1.0])
         video_name = os.path.join(config.sample_dir , 'results.mp4')
         utils.image_to_video(os.path.join('../', 'temp', 'img'), video_name )
         utils.add_audio(video_name, config.in_file)
