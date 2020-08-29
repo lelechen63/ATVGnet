@@ -6,9 +6,13 @@ def main():
     image_list  = os.listdir('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_image')
     
     for imge in image_list:
+        if 'DS_store' in imge:
+            continue
         image_path = os.path.join('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_image', imge, '1.jpg')
         
         for audio in audio_list:
+            if 'DS_store' in audio:
+                continue
             print (audio)
             audio_path = os.path.join('/u/lchen63/ATVGnet_cvpr2020/dataset/test_data/test_audio', audio)
             
