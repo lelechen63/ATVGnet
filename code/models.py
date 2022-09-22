@@ -241,12 +241,12 @@ class VG_net(nn.Module):
 
         self.base = nn.Sequential(*model)
         model = []
-        model += [nn.Conv2d(ngf/2, output_nc, kernel_size=7, padding=3)]
+        model += [nn.Conv2d(ngf//2, output_nc, kernel_size=7, padding=3)]
         model += [nn.Tanh()]
         self.generator_color = nn.Sequential(*model)
 
         model = []
-        model += [nn.Conv2d(ngf/2, 1, kernel_size=7, padding=3)]
+        model += [nn.Conv2d(ngf//2, 1, kernel_size=7, padding=3)]
         model += [nn.Sigmoid()]
         self.generator_attention = nn.Sequential(*model)
 
@@ -266,7 +266,7 @@ class VG_net(nn.Module):
         
         lstm_input = list()
         lmark_atts = list()
-        for step_t in xrange(landmarks.size(1)):
+        for step_t in range(landmarks.size(1)):
             landmark = landmarks[:,step_t,:]
             landmark.data = landmark.data.contiguous()
             landmark = self.landmark_encoder(landmark.view(landmark.size(0), -1))
@@ -286,7 +286,7 @@ class VG_net(nn.Module):
         outputs = []
         atts = []
         colors = []
-        for step_t in xrange(landmarks.size(1)):
+        for step_t in range(landmarks.size(1)):
             input_t = lstm_output[:,step_t,:,:,:]
             v_feature1 = self.generator1(input_t)
             v_feature1_f = image_feature1 * (1- lmark_atts[:,step_t,:,:,:] ) + v_feature1 * lmark_atts[:,step_t,:,:,:] 

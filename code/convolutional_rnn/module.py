@@ -11,20 +11,20 @@ from .utils import _single, _pair, _triple
 
 class ConvNdRNNBase(torch.nn.Module):
     def __init__(self,
-                 mode,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 convndim=2,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
-        super(ConvNdRNNBase, self).__init__()
+                 mode: str,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 convndim: int=2,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        super().__init__()
         self.mode = mode
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -216,21 +216,143 @@ class ConvNdRNNBase(torch.nn.Module):
         return [[getattr(self, weight) for weight in weights] for weights in self._all_weights]
 
 
+class Conv1dRNN(ConvNdRNNBase):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        if nonlinearity == 'tanh':
+            mode = 'RNN_TANH'
+        elif nonlinearity == 'relu':
+            mode = 'RNN_RELU'
+        else:
+            raise ValueError("Unknown nonlinearity '{}'".format(nonlinearity))
+        super().__init__(
+            mode=mode,
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            num_layers=num_layers,
+            bias=bias,
+            batch_first=batch_first,
+            dropout=dropout,
+            bidirectional=bidirectional,
+            convndim=1,
+            stride=stride,
+            dilation=dilation,
+            groups=groups)
+
+
+class Conv1dPeepholeLSTM(ConvNdRNNBase):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        super().__init__(
+            mode='PeepholeLSTM',
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            num_layers=num_layers,
+            bias=bias,
+            batch_first=batch_first,
+            dropout=dropout,
+            bidirectional=bidirectional,
+            convndim=1,
+            stride=stride,
+            dilation=dilation,
+            groups=groups)
+
+
+class Conv1dLSTM(ConvNdRNNBase):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        super().__init__(
+            mode='LSTM',
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            num_layers=num_layers,
+            bias=bias,
+            batch_first=batch_first,
+            dropout=dropout,
+            bidirectional=bidirectional,
+            convndim=1,
+            stride=stride,
+            dilation=dilation,
+            groups=groups)
+
+
+class Conv1dGRU(ConvNdRNNBase):
+    def __init__(self,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        super().__init__(
+            mode='GRU',
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            num_layers=num_layers,
+            bias=bias,
+            batch_first=batch_first,
+            dropout=dropout,
+            bidirectional=bidirectional,
+            convndim=1,
+            stride=stride,
+            dilation=dilation,
+            groups=groups)
+
 
 class Conv2dRNN(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 nonlinearity='tanh',
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         if nonlinearity == 'tanh':
             mode = 'RNN_TANH'
         elif nonlinearity == 'relu':
@@ -255,17 +377,17 @@ class Conv2dRNN(ConvNdRNNBase):
 
 class Conv2dLSTM(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         super().__init__(
             mode='LSTM',
             in_channels=in_channels,
@@ -284,17 +406,17 @@ class Conv2dLSTM(ConvNdRNNBase):
 
 class Conv2dPeepholeLSTM(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         super().__init__(
             mode='PeepholeLSTM',
             in_channels=in_channels,
@@ -313,18 +435,18 @@ class Conv2dPeepholeLSTM(ConvNdRNNBase):
 
 class Conv2dGRU(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
-        super(Conv2dGRU, self).__init__(
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
+        super().__init__(
             mode='GRU',
             in_channels=in_channels,
             out_channels=out_channels,
@@ -342,18 +464,18 @@ class Conv2dGRU(ConvNdRNNBase):
 
 class Conv3dRNN(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 nonlinearity='tanh',
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         if nonlinearity == 'tanh':
             mode = 'RNN_TANH'
         elif nonlinearity == 'relu':
@@ -378,17 +500,17 @@ class Conv3dRNN(ConvNdRNNBase):
 
 class Conv3dLSTM(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         super().__init__(
             mode='LSTM',
             in_channels=in_channels,
@@ -407,17 +529,17 @@ class Conv3dLSTM(ConvNdRNNBase):
 
 class Conv3dPeepholeLSTM(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         super().__init__(
             mode='PeepholeLSTM',
             in_channels=in_channels,
@@ -436,17 +558,17 @@ class Conv3dPeepholeLSTM(ConvNdRNNBase):
 
 class Conv3dGRU(ConvNdRNNBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 num_layers=1,
-                 bias=True,
-                 batch_first=False,
-                 dropout=0.,
-                 bidirectional=False,
-                 stride=1,
-                 dilation=1,
-                 groups=1):
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 num_layers: int=1,
+                 bias: bool=True,
+                 batch_first: bool=False,
+                 dropout: float=0.,
+                 bidirectional: bool=False,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1):
         super().__init__(
             mode='GRU',
             in_channels=in_channels,
@@ -465,15 +587,15 @@ class Conv3dGRU(ConvNdRNNBase):
 
 class ConvRNNCellBase(torch.nn.Module):
     def __init__(self,
-                 mode,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 convndim=2,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 mode: str,
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 convndim: int=2,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__()
         self.mode = mode
@@ -593,14 +715,14 @@ class ConvRNNCellBase(torch.nn.Module):
 
 class Conv1dRNNCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 nonlinearity='tanh',
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         if nonlinearity == 'tanh':
             mode = 'RNN_TANH'
@@ -623,13 +745,13 @@ class Conv1dRNNCell(ConvRNNCellBase):
 
 class Conv1dLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='LSTM',
@@ -646,13 +768,13 @@ class Conv1dLSTMCell(ConvRNNCellBase):
 
 class Conv1dPeepholeLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='PeepholeLSTM',
@@ -669,13 +791,13 @@ class Conv1dPeepholeLSTMCell(ConvRNNCellBase):
 
 class Conv1dGRUCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='GRU',
@@ -692,14 +814,14 @@ class Conv1dGRUCell(ConvRNNCellBase):
 
 class Conv2dRNNCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 nonlinearity='tanh',
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         if nonlinearity == 'tanh':
             mode = 'RNN_TANH'
@@ -722,13 +844,13 @@ class Conv2dRNNCell(ConvRNNCellBase):
 
 class Conv2dLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='LSTM',
@@ -745,13 +867,13 @@ class Conv2dLSTMCell(ConvRNNCellBase):
 
 class Conv2dPeepholeLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='PeepholeLSTM',
@@ -768,13 +890,13 @@ class Conv2dPeepholeLSTMCell(ConvRNNCellBase):
 
 class Conv2dGRUCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='GRU',
@@ -791,14 +913,14 @@ class Conv2dGRUCell(ConvRNNCellBase):
 
 class Conv3dRNNCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 nonlinearity='tanh',
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 nonlinearity: str='tanh',
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         if nonlinearity == 'tanh':
             mode = 'RNN_TANH'
@@ -821,13 +943,13 @@ class Conv3dRNNCell(ConvRNNCellBase):
 
 class Conv3dLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='LSTM',
@@ -844,13 +966,13 @@ class Conv3dLSTMCell(ConvRNNCellBase):
 
 class Conv3dPeepholeLSTMCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='PeepholeLSTM',
@@ -867,13 +989,13 @@ class Conv3dPeepholeLSTMCell(ConvRNNCellBase):
 
 class Conv3dGRUCell(ConvRNNCellBase):
     def __init__(self,
-                 in_channels,
-                 out_channels,
-                 kernel_size,
-                 bias=True,
-                 stride=1,
-                 dilation=1,
-                 groups=1
+                 in_channels: int,
+                 out_channels: int,
+                 kernel_size: Union[int, Sequence[int]],
+                 bias: bool=True,
+                 stride: Union[int, Sequence[int]]=1,
+                 dilation: Union[int, Sequence[int]]=1,
+                 groups: int=1
                  ):
         super().__init__(
             mode='GRU',

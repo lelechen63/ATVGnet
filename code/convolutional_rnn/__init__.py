@@ -1,3 +1,8 @@
+from .module import Conv1dRNN
+from .module import Conv1dLSTM
+from .module import Conv1dPeepholeLSTM
+from .module import Conv1dGRU
+
 from .module import Conv2dRNN
 from .module import Conv2dLSTM
 from .module import Conv2dPeepholeLSTM
