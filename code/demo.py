@@ -22,6 +22,7 @@ import python_speech_features
 from skimage import transform as tf
 from copy import deepcopy
 from scipy.spatial import procrustes
+import imageio
 
 import dlib
 
@@ -248,14 +249,14 @@ def test():
         for indx in range(fake_ims.size(1)):
             fake_im = fake_ims[:,indx]
             fake_store = fake_im.permute(0,2,3,1).data.cpu().numpy()[0]
-            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'img') ,indx ), fake_store)
+            imageio.imwrite("{}/{:05d}.png".format(os.path.join('../', 'temp', 'img') ,indx ), fake_store)
             m = ms[:,indx]
             att = atts[:,indx]
             m = m.permute(0,2,3,1).data.cpu().numpy()[0]
             att = att.data.cpu().numpy()[0,0]
 
-            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'motion' ) ,indx ), m)
-            scipy.misc.imsave("{}/{:05d}.png".format(os.path.join('../', 'temp', 'attention') ,indx ), att)
+            imageio.imwrite("{}/{:05d}.png".format(os.path.join('../', 'temp', 'motion' ) ,indx ), m)
+            imageio.imwrite("{}/{:05d}.png".format(os.path.join('../', 'temp', 'attention') ,indx ), att)
 
         print ( 'In total, generate {:d} images, cost time: {:03f} seconds'.format(fake_ims.size(1), time.time() - t) )
         save_name = config.save_name

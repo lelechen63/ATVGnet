@@ -2,7 +2,11 @@ from functools import partial
 
 import torch
 import torch.nn.functional as F
-from torch.nn._functions.thnn import rnnFusedPointwise as fusedBackend
+try:
+    # pytorch<=0.4.1
+    from torch.nn._functions.thnn import rnnFusedPointwise as fusedBackend
+except ImportError:
+    fusedBackend = None
 
 from .utils import _single, _pair, _triple
 
@@ -19,7 +23,7 @@ def RNNTanhCell(input, hidden, w_ih, w_hh, b_ih=None, b_hh=None, linear_func=Non
     """ Copied from torch.nn._functions.rnn and modified """
     if linear_func is None:
         linear_func = F.linear
-    hy = F.tanh(linear_func(input, w_ih, b_ih) + linear_func(hidden, w_hh, b_hh))
+    hy = torch.tanh(linear_func(input, w_ih, b_ih) + linear_func(hidden, w_hh, b_hh))
     return hy
 
 
@@ -27,7 +31,7 @@ def LSTMCell(input, hidden, w_ih, w_hh, b_ih=None, b_hh=None, linear_func=None):
     """ Copied from torch.nn._functions.rnn and modified """
     if linear_func is None:
         linear_func = F.linear
-    if input.is_cuda and linear_func is F.linear:
+    if input.is_cuda and linear_func is F.linear and fusedBackend is not None:
         igates = linear_func(input, w_ih)
         hgates = linear_func(hidden[0], w_hh)
         state = fusedBackend.LSTMFused.apply
@@ -37,13 +41,13 @@ def LSTMCell(input, hidden, w_ih, w_hh, b_ih=None, b_hh=None, linear_func=None):
     gates = linear_func(input, w_ih, b_ih) + linear_func(hx, w_hh, b_hh)
     ingate, forgetgate, cellgate, outgate = gates.chunk(4, 1)
 
-    ingate = F.sigmoid(ingate)
-    forgetgate = F.sigmoid(forgetgate)
-    cellgate = F.tanh(cellgate)
-    outgate = F.sigmoid(outgate)
+    ingate = torch.sigmoid(ingate)
+    forgetgate = torch.sigmoid(forgetgate)
+    cellgate = torch.tanh(cellgate)
+    outgate = torch.sigmoid(outgate)
 
     cy = (forgetgate * cx) + (ingate * cellgate)
-    hy = outgate * F.tanh(cy)
+    hy = outgate * torch.tanh(cy)
 
     return hy, cy
 
@@ -58,15 +62,15 @@ def PeepholeLSTMCell(input, hidden, w_ih, w_hh, w_pi, w_pf, w_po,
 
     ingate += linear_func(cx, w_pi)
     forgetgate += linear_func(cx, w_pf)
-    ingate = F.sigmoid(ingate)
-    forgetgate = F.sigmoid(forgetgate)
-    cellgate = F.tanh(cellgate)
+    ingate = torch.sigmoid(ingate)
+    forgetgate = torch.sigmoid(forgetgate)
+    cellgate = torch.tanh(cellgate)
 
     cy = (forgetgate * cx) + (ingate * cellgate)
     outgate += linear_func(cy, w_po)
-    outgate = F.sigmoid(outgate)
+    outgate = torch.sigmoid(outgate)
 
-    hy = outgate * F.tanh(cy)
+    hy = outgate * torch.tanh(cy)
 
     return hy, cy
 
@@ -75,7 +79,7 @@ def GRUCell(input, hidden, w_ih, w_hh, b_ih=None, b_hh=None, linear_func=None):
     """ Copied from torch.nn._functions.rnn and modified """
     if linear_func is None:
         linear_func = F.linear
-    if input.is_cuda and linear_func is F.linear:
+    if input.is_cuda and linear_func is F.linear and fusedBackend is not None:
         gi = linear_func(input, w_ih)
         gh = linear_func(hidden, w_hh)
         state = fusedBackend.GRUFused.apply
@@ -85,9 +89,9 @@ def GRUCell(input, hidden, w_ih, w_hh, b_ih=None, b_hh=None, linear_func=None):
     i_r, i_i, i_n = gi.chunk(3, 1)
     h_r, h_i, h_n = gh.chunk(3, 1)
 
-    resetgate = F.sigmoid(i_r + h_r)
-    inputgate = F.sigmoid(i_i + h_i)
-    newgate = F.tanh(i_n + resetgate * h_n)
+    resetgate = torch.sigmoid(i_r + h_r)
+    inputgate = torch.sigmoid(i_i + h_i)
+    newgate = torch.tanh(i_n + resetgate * h_n)
     hy = newgate + inputgate * (hidden - newgate)
 
     return hy
